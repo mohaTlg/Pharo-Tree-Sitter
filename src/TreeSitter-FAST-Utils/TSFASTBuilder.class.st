@@ -62,7 +62,8 @@ TSFASTBuilder >> addDefineHierarchyIn: metamodelGeneratorClass [
     method := String streamContents: [ :stream |
         stream << 'defineHierarchy'; cr; tab; << '"define class hierarchy"'; cr.
         stream tab; << 'super defineHierarchy.'; cr.
-        stream tab; << 'entity --|> tEntity.'; cr; cr.
+        stream tab; << 'entity --|> tEntity.'; cr.
+			stream tab; << 'entity --|> #TEntityMetaLevelDependency.'; cr; cr.
 			
 			stream tab; << 'program --|> #THasImmediateSource.'; cr.
 			stream tab; << '_ERROR --|> #THasImmediateSource.'; cr; cr.
