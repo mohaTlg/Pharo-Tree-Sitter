@@ -273,18 +273,22 @@ TSFASTBuilder >> commonAncestorOfAll: typeList in: parentMap [
 { #category : 'building' }
 TSFASTBuilder >> createImporter [
 
-	| class |
+	| class langMethodName |
 	class := self class classInstaller make: [ :aBuilder |
 			         aBuilder
 				         name: #FAST , self languageName , #Importer;
 				         superclass: TSFASTAbstractImporter;
 				         package: #FAST , '-' , self languageName , #'-Tools' ].
+			
+	"Safeguard: if ts_language_name returns empty, fall back to the language extension method name"
+    langMethodName := tsLanguage name.
+    (langMethodName isNil or: [ langMethodName isEmpty ]) 
+        ifTrue: [ langMethodName := self languageName uncapitalized ].
 
 	class
 		compile: 'tsLanguage
 
-	^ TSLanguage ' , tsLanguage name
-		classified: 'accessing'
+	^ TSLanguage ' , langMethodName 
 ]
 
 { #category : 'building' }
