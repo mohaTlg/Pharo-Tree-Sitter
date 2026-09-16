@@ -65,7 +65,6 @@ TSFASTBuilder >> addDefineHierarchyIn: metamodelGeneratorClass [
         stream tab; << 'entity --|> tEntity.'; cr.
 			stream tab; << 'entity --|> #TEntityMetaLevelDependency.'; cr; cr.
 			
-			stream tab; << 'program --|> #THasImmediateSource.'; cr.
 			stream tab; << '_ERROR --|> #THasImmediateSource.'; cr; cr.
 	
         
@@ -74,6 +73,10 @@ TSFASTBuilder >> addDefineHierarchyIn: metamodelGeneratorClass [
                 | parentType parentVar |
                 parentType := node at: 'type'.
                 parentVar := self slotNameForNodeType: parentType.
+
+					(node at: 'root' ifAbsent: false) ifTrue: [ 
+						stream tab; << (node at: 'type'); << ' --|> #THasImmediateSource.'; cr; cr.
+						].
                 
                 (node at: 'subtypes' ifAbsent: [ #() ]) do: [ :subNode |
                     | subType subVar subNodeFull isValid |
@@ -282,8 +285,9 @@ TSFASTBuilder >> createImporter [
 			
 	"Safeguard: if ts_language_name returns empty, fall back to the language extension method name"
     langMethodName := tsLanguage name.
+
     (langMethodName isNil or: [ langMethodName isEmpty ]) 
-        ifTrue: [ langMethodName := self languageName uncapitalized ].
+        ifTrue: [ langMethodName := self languageName asLowercase ].
 
 	class
 		compile: 'tsLanguage
